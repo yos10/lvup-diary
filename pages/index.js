@@ -2,17 +2,27 @@ import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 import { db } from '../firebase';
 import { collection, getDocs } from 'firebase/firestore';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
+  const [articles, setArticles] = useState([]);
   useEffect(() => {
     (async () => {
+      const articles = [];
       const querySnapshot = await getDocs(collection(db, 'articles'));
       querySnapshot.forEach((doc) => {
-        console.log(doc.id, ' => ', doc.data());
+        articles.push({
+          id: doc.id,
+          title: doc.data().title,
+          description: doc.data().description,
+        });
+        setArticles(articles);
       });
     })();
   }, []);
+  // データベースからのデータが入る
+  console.log(articles);
+
   return (
     <div className={styles.container}>
       <Head>

@@ -1,8 +1,18 @@
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
-import '../firebase';
+import { db } from '../firebase';
+import { collection, getDocs } from 'firebase/firestore';
+import { useEffect } from 'react';
 
 export default function Home() {
+  useEffect(() => {
+    (async () => {
+      const querySnapshot = await getDocs(collection(db, 'articles'));
+      querySnapshot.forEach((doc) => {
+        console.log(doc.id, ' => ', doc.data());
+      });
+    })();
+  }, []);
   return (
     <div className={styles.container}>
       <Head>
